@@ -12,7 +12,7 @@
 .first{
     position: absolute;
     top: 5%;
-    left: 23%;
+    left: 20%;
     border: 4px solid rgb(220, 58, 220);
     padding: 9px;
     border-radius: 10%;
@@ -20,7 +20,7 @@
 .second{
     position: absolute;
     top: 35%;
-    left: 20%;
+    left: 17%;
     border: 4px solid rgb(16, 139, 226);
     padding: 9px;
     border-radius: 10%;
@@ -28,7 +28,7 @@
 .third{
     position: absolute;
     top: 65%;
-    left: 20%;
+    left: 17%;
     border: 4px solid rgb(83, 30, 169);
     padding: 9px;
     border-radius: 10%;
