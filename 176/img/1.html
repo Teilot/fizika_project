@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<link rel="icon" href="https://efizika.ru/theme/image.php/adaptable/theme/1689332217/favicon" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>176. Виртуальная лабораторная работа по физике "Определение постоянной Планка"</title>
+</head>
+<body>
+ <div style="position: absolute; top: 294px; left:920px;">
+		<label class="form-control">
+		  <input type="radio" name="radio" onchange="change('mercury')" checked/>
+		    <br> 
+		</label><br>
+		<label class="form-control">
+		  <input type="radio" name="radio" onchange="change('hydrogen')"/>
+		      <br>
+		</label>
+  </div>
+    <canvas id="canvas" width="1280" height="720"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const arrow = new Image()
+		const ruller = new Image()
+		const bg = new Image()
+        const mkamp = new Image()
+        const plus = new Image()
+        const minus = new Image()
+        let deg = 0
+        let mouseDownOnRuller = false
+
+        function loadImageSrc(src, img) {
+            return new Promise((res, rej) => {
+                img.src = src
+                img.onload = () => { res() }
+            })
+        }
+
+function change(xim) {		
+				deg = 0;
+				arrow.src = 'img/' + xim + '.png'
+				setTimeout(drawCanvas, 100, 0);
+		}
+
+        function init() {
+            Promise.all([
+              loadImageSrc('img/mercury.png', arrow),
+			   loadImageSrc('img/lin8201.png', ruller),
+				loadImageSrc('img/fon.png', bg),
+                loadImageSrc('img/plus.png', plus),
+                loadImageSrc('img/minus.png', minus)
+            ])
+                .then(() => window.requestAnimationFrame(() => drawCanvas(0)))
+
+        }
+        
+        function drawCanvas(degree) {
+            const gamma = Math.PI * degree / 180
+            const alpha = 100 * Math.cos(gamma) * Math.cos(gamma)
+            const rotation = 100
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+			ctx.drawImage(arrow, -deg*2+90, 185)
+
+
+
+
+            // Draw ruller
+			const pattern = ctx.createPattern(ruller, 'repeat-y')
+           const vertOffset = -33+ 3.005 * -degree // last number = mmOffset
+           const spaceTop = 42
+          ctx.fillStyle = pattern
+          // ctx.drawImage(ruller, 650, 0)
+		   ctx.save()
+            ctx.translate(549, spaceTop + vertOffset)
+            ctx.fillRect(0, -vertOffset, 76, 288)
+            ctx.restore()
+
+            
+			
+			
+			
+			// Draw backgroung
+            ctx.drawImage(bg, 0, 0)
+
+            // Draw buttons
+            ctx.drawImage(plus, 0, 0, 93, 93, 360, 90, 46, 46)
+            ctx.drawImage(minus, 0, 0, 93, 93, 130, 90, 46, 46)
+
+            ctx.save()
+            ctx.font = '32px arial'
+            ctx.fillStyle = 'red'
+            ctx.fillText(degree.toString(), 250, 120)
+            ctx.restore()
+
+
+
+            ctx.save()
+            ctx.font = '32px arial'
+            ctx.fillStyle = 'red'
+           // ctx.fillText((50 * Math.cos(gamma) * Math.cos(gamma)).toFixed(2), 890, 110)
+            ctx.restore()
+
+
+            // Draw arrow
+            ctx.save()
+            //ctx.translate(canvas.clientWidth / 2 + 100 + 170, canvas.clientHeight / 2 + 10 - 106)
+            // ctx.rotate(Math.PI / 2)
+            //ctx.drawImage(Math.PI / 180 * (30 + 2.4 * 50 * Math.cos(gamma) * Math.cos(gamma)))
+            
+            ctx.restore()
+
+	        
+        }
+
+     function setNewDegree(offset) {
+          deg += offset
+		  if ( deg > 780 ) { deg = 780; }
+		  if ( deg < -10 ) { deg = -10; }		  
+		  window.requestAnimationFrame(() => drawCanvas(deg))
+        }
+
+        let prevY = 0
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.x > 360 && e.x < 360 + 46 && e.y > 140 && e.y < 140 + 46) { // Plus click
+                location.href="1.html"
+            }
+
+
+			if (e.x > 360 && e.x < 360 + 46 && e.y > 90 && e.y < 90 + 46) { // Plus click
+                setNewDegree(1)
+            }
+
+            if (e.x > 130 && e.x < 130 + 46 && e.y > 90 && e.y < 90 + 46) { // Minus click
+                setNewDegree(-1)
+            }
+
+            if (e.x > 544 && e.x < 544 + 76 && e.y > 42 && e.y < 42 + 270) {
+                mouseDownOnRuller = true
+                prevY = e.y
+                prevY = e.y
+            }
+        })
+
+        canvas.addEventListener('mouseup', () => {
+            mouseDownOnRuller = false
+        })
+
+
+        canvas.addEventListener('mousemove', (e) => {
+
+        if ((e.x > 360 && e.x < 360 + 46 && e.y > 90 && e.y < 90 + 46) || (e.x > 130 && e.x < 130 + 46 && e.y > 90 && e.y < 90 + 46) || (e.x > 544 && e.x < 544 + 76 && e.y > 42 && e.y < 42 + 270)) {
+                canvas.style.cursor = 'pointer'
+                canvas.style.cursor = 'pointer'
+            } else {
+                canvas.style.cursor = 'default'
+            }
+
+            if (!mouseDownOnRuller) {
+                return
+            }
+
+            let offsetY = prevY - e.y
+            // console.log(offsetY)
+            setNewDegree(Math.floor(offsetY / 2))
+
+            prevY = e.y
+        })
+
+        canvas.addEventListener('touchstart', (e) => {
+            const x = e.touches[0].clientX
+            const y = e.touches[0].clientY
+            if (x > 544 && x < 544 + 76 && y > 42 && y < 42 + 350) {
+                mouseDownOnRuller = true
+                prevY = y
+            }
+        })
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!mouseDownOnRuller) {
+                return
+            }
+            e.preventDefault()
+
+            let offsetY = prevY - e.touches[0].clientY
+            setNewDegree(Math.floor(offsetY / 4))
+
+            prevY = e.touches[0].clientY
+        })
+
+        canvas.addEventListener('touchend', (e) => {
+            mouseDownOnRuller = false
+        })
+
+        init()
+
+    </script>
+</body>
+</html>

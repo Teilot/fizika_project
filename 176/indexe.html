@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="icon" href="https://efizika.ru/theme/image.php/adaptable/theme/1689332217/favicon" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>170. Виртуальная лабораторная работа "Изучение сплошного и линейчатого спектра". Аппроксимация</title>
+    <link href="style/style.css" rel="stylesheet" type="text/css">
+	<script src="scripts/chart.js"></script>
+    <script src="scripts/anychart-base.min.js"></script>
+   
+</head>
+<body>
+
+<div style="width: 100px; height: 100px; position: absolute; top: 30px; left:1180px;">
+        <table id="controlPanel">
+            <tr>
+                <td style="cursor: pointer;"> 
+				<a href=index.html><img id="btn_stop" width="55" height="55" src="img\er2.png"></a></td>
+            </tr>
+            </table>
+    </div>
+
+<div class="container">
+    <p class="text-item">Введите значения точек &#966<sub>1</sub> через пробел</p>
+    <label for="inputValueX"></label><input id="inputValueX">
+
+    <p class="text-item">Введите значения точек &#955<sub>1</sub> через пробел</p>
+    <label for="inputValueY"></label><input id="inputValueY">
+
+    <ul class="list">
+        <li class="text-li">Аппроксимирующие функции:</li>
+        <li>
+            <input type="checkbox" id="liner-approx">
+            <label for="liner-approx">Линейная аппроксимация</label>
+        </li>
+        <li>
+            <input type="checkbox" id="quadratic-approx">
+            <label for="quadratic-approx">Квадратичная аппроксимация</label>
+        </li>
+    </ul>
+
+    <button id="button-click">Расчитать</button>
+<!--    <input type="file" onchange="readFile(this)">-->
+
+    <div class="function"></div>
+
+    <div class="input-valueX2">
+        <p class="text-item">Введите значения точек &#966<sub>2</sub> через пробел</p>
+        <label for="inputValueX2"></label><input id="inputValueX2">
+        <button id="button-for-inputValueX2">Расчитать</button>
+    </div>
+    <div class="output-y2"></div>
+    <div class="chart">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+
+<!--<script>-->
+<!--    let xValues;-->
+<!--    let yValues;-->
+<!--    function readFile(input) {-->
+<!--        let file = input.files[0];-->
+
+<!--        let reader = new FileReader();-->
+
+<!--        reader.readAsText(file);-->
+<!--        let readArrey = [];-->
+<!--        let inputValue;-->
+<!--        reader.onload = function() {-->
+<!--            readArrey = reader.result;-->
+<!--             inputValue = readArrey.split('\r\n');-->
+<!--            xValues = inputValue[0].split(' ');-->
+<!--            yValues = inputValue[1].split(' ');-->
+<!--        };-->
+
+<!--        reader.onerror = function() {-->
+<!--            console.log(reader.error);-->
+<!--        };-->
+
+<!--    }-->
+<!--</script>-->
+<script src="scripts/main.js"></script>
+<script src="scripts/Matrix.js"></script>
+
+</body>
+</html>
