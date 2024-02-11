@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <link rel="icon" href="https://efizika.ru/theme/image.php/adaptable/theme/1689332217/favicon" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>135. Виртуальная лабораторная работа по физике "Изучение закона Малюса"</title>
+</head>
+<body>
+    <canvas id="canvas" width="1280" height="720"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const ruller = new Image()
+        const bg = new Image()
+        const arrow = new Image()
+        const mkamp = new Image()
+        const plus = new Image()
+        const minus = new Image()
+        let deg = 45
+        let mouseDownOnRuller = false
+
+        function loadImageSrc(src, img) {
+            return new Promise((res, rej) => {
+                img.src = src
+                img.onload = () => { res() }
+            })
+        }
+
+        function init() {
+            Promise.all([
+                loadImageSrc('img/lin.png', ruller),
+                loadImageSrc('img/fon.png', bg),
+                loadImageSrc('img/str.png', arrow),
+                loadImageSrc('img/mkamp.png', mkamp),
+                loadImageSrc('img/plus.png', plus),
+                loadImageSrc('img/minus.png', minus)
+            ])
+                .then(() => window.requestAnimationFrame(() => drawCanvas(45)))
+
+        }
+        
+        function drawCanvas(degree) {
+            const gamma = Math.PI * degree / 180
+            const alpha = 100 * Math.cos(gamma) * Math.cos(gamma)
+            const rotation = 0
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+
+            // Draw ruller
+            const pattern = ctx.createPattern(ruller, 'repeat-y')
+            const vertOffset = 118.4 + 3.066663 * -degree // last number = mmOffset
+            const spaceTop = 42
+            ctx.fillStyle = pattern
+            ctx.save()
+            ctx.translate(544, spaceTop + vertOffset)
+            ctx.fillRect(0, -vertOffset, 76, 288)
+            ctx.restore()
+
+            // Draw backgroung
+            ctx.drawImage(bg, 0, 0)
+
+            // Draw buttons
+            ctx.drawImage(plus, 0, 0, 93, 93, 400, 156, 46, 46)
+            ctx.drawImage(minus, 0, 0, 93, 93, 130, 156, 46, 46)
+
+            ctx.save()
+            ctx.font = '32px arial'
+            ctx.fillStyle = 'red'
+            ctx.fillText(degree.toString(), 268, 190)
+            ctx.restore()
+
+
+
+            ctx.save()
+            ctx.font = '32px arial'
+            ctx.fillStyle = 'red'
+            ctx.restore()
+
+
+            // Draw arrow
+            ctx.save()
+            ctx.translate(canvas.clientWidth / 2 + 100 + 170, canvas.clientHeight / 2 + 10 - 106)
+            ctx.rotate(Math.PI / 180 * (30 + 2.4 * 50 * Math.cos(gamma) * Math.cos(gamma)))
+            ctx.drawImage(arrow, 0, 17, 100, 20, -100, 0, 100, 20)
+            ctx.restore()
+
+	            // Draw mkamp
+            ctx.drawImage(mkamp, 800, 126)		
+			const startX = 667
+            const startY = 430.5
+            ctx.save()
+            ctx.globalAlpha = Math.cos(gamma) * Math.cos(gamma)
+            ctx.strokeStyle = 'red'
+            ctx.lineWidth = 3
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(startX + 173, startY)
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.moveTo(startX + 187, startY)
+            ctx.lineTo(startX + 187 + 22, startY)
+            ctx.stroke()
+            ctx.restore()
+        }
+
+        function setNewDegree(offset) {
+            deg += offset
+            deg = deg % 360
+            if (deg < 0) {
+                deg = 360 + deg
+            }
+            window.requestAnimationFrame(() => drawCanvas(deg))
+        }
+
+        let prevY = 0
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.x > 400 && e.x < 400 + 46 && e.y > 156 && e.y < 156 + 46) { // Plus click
+                setNewDegree(1)
+            }
+
+            if (e.x > 130 && e.x < 130 + 46 && e.y > 156 && e.y < 156 + 46) { // Minus click
+                setNewDegree(-1)
+            }
+
+            if (e.x > 544 && e.x < 544 + 76 && e.y > 42 && e.y < 42 + 270) {
+                mouseDownOnRuller = true
+                prevY = e.y
+            }
+        })
+
+        canvas.addEventListener('mouseup', () => {
+            mouseDownOnRuller = false
+        })
+
+
+        canvas.addEventListener('mousemove', (e) => {
+
+            if ((e.x > 400 && e.x < 400 + 46 && e.y > 156 && e.y < 156 + 46) || (e.x > 130 && e.x < 130 + 46 && e.y > 156 && e.y < 156 + 46) || (e.x > 544 && e.x < 544 + 76 && e.y > 42 && e.y < 42 + 270)) {
+                canvas.style.cursor = 'pointer'
+            } else {
+                canvas.style.cursor = 'default'
+            }
+
+            if (!mouseDownOnRuller) {
+                return
+            }
+
+            let offsetY = prevY - e.y
+            // console.log(offsetY)
+            setNewDegree(Math.floor(offsetY / 2))
+
+            prevY = e.y
+        })
+
+        canvas.addEventListener('touchstart', (e) => {
+            const x = e.touches[0].clientX
+            const y = e.touches[0].clientY
+            if (x > 544 && x < 544 + 76 && y > 42 && y < 42 + 270) {
+                mouseDownOnRuller = true
+                prevY = y
+            }
+        })
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!mouseDownOnRuller) {
+                return
+            }
+            e.preventDefault()
+
+            let offsetY = prevY - e.touches[0].clientY
+            setNewDegree(Math.floor(offsetY / 4))
+
+            prevY = e.touches[0].clientY
+        })
+
+        canvas.addEventListener('touchend', (e) => {
+            mouseDownOnRuller = false
+        })
+
+        init()
+
+    </script>
+</body>
+</html>
