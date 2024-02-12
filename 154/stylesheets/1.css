@@ -1,0 +1,66 @@
+#canvas {
+  position: absolute;
+  top:130px;
+  left: 540px;
+}
+
+#stand {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100px;
+}
+
+#prug {
+  position: absolute;
+  top: 130px;
+  left: 690px;
+  height: 50px;
+  z-index: 4;
+}
+
+
+#level {
+  position: absolute;
+  top: 400px;
+  left: 470px;
+  height: 300px;
+}
+
+#stop {
+  height: 30px;
+}
+
+
+#level2 {
+  position: absolute;
+  top: 478px;
+  left: 741px;
+  width: 33px;
+  height: 73px;
+  z-index: 4;
+  height: 75px;
+}
+
+#ball {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 3;
+  transform-origin: center center;
+}
+
+#planet {
+  position: absolute;
+  top: 260px;
+  left: 200px;
+}
+
+#ten {
+  position: absolute;
+  top: 550px;
+  left: 460px;
+  width: 350px;
+  height: 100px;
+  z-index: 0;
+}
